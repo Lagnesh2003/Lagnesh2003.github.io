@@ -3,29 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lagnesh Mahapatra · Robot Learning (RL &amp; VLA)</title>
-  <meta name="description" content="Lagnesh Mahapatra: robot learning engineer working on reinforcement learning and vision-language-action policies, from MuJoCo simulation to real hardware (SO-101 arm, Furuta pendulum). IIT Bombay, ex-Skyroot GNC.">
+  <title>Lagnesh Mahapatra</title>
+  <meta name="description" content="Lagnesh Mahapatra: robot learning. Reinforcement learning and vision-language-action policies for real robots, from MuJoCo simulation to hardware: PPO/SAC on a Furuta pendulum, ACT on an SO-101 arm, learned world models.">
   <meta name="author" content="Lagnesh Mahapatra">
   <link rel="canonical" href="https://lagnesh2003.github.io/">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://lagnesh2003.github.io/">
-  <meta property="og:title" content="Lagnesh Mahapatra · Robot Learning (RL & VLA)">
-  <meta property="og:description" content="RL and VLA policies for robots, sim to real: PPO/SAC on a Furuta pendulum, ACT/VLA on an SO-101 arm, world models from scratch.">
+  <meta property="og:title" content="Lagnesh Mahapatra · Robot Learning">
+  <meta property="og:description" content="Teaching robots physical skills, first in simulation, then on hardware I build myself.">
   <meta property="og:image" content="https://lagnesh2003.github.io/assets/img/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0d0f12" media="(prefers-color-scheme: dark)">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 
   <script type="application/ld+json">
   {
@@ -33,13 +29,12 @@
     "@type": "Person",
     "name": "Lagnesh Mahapatra",
     "url": "https://lagnesh2003.github.io/",
-    "jobTitle": "Robot Learning Engineer",
+    "image": "https://lagnesh2003.github.io/assets/img/photo.webp",
+    "jobTitle": "Perception & Autonomy Engineer",
+    "worksFor": "LAT Aerospace",
     "alumniOf": "Indian Institute of Technology Bombay",
-    "knowsAbout": ["Reinforcement learning", "Vision-language-action models", "Imitation learning", "World models", "Robotics", "MuJoCo", "Control systems"],
-    "sameAs": [
-      "https://github.com/Lagnesh2003",
-      "https://www.linkedin.com/in/lagnesh-mahapatra-135503249/"
-    ]
+    "knowsAbout": ["Robot learning", "Reinforcement learning", "Vision-language-action models", "Imitation learning", "World models", "Control systems"],
+    "sameAs": ["https://github.com/Lagnesh2003", "https://www.linkedin.com/in/lagnesh-mahapatra-135503249/"]
   }
   </script>
 </head>
@@ -48,297 +43,165 @@
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="Lagnesh Mahapatra, home"><span class="brand-mark">LM</span><span class="brand-name">Lagnesh Mahapatra</span></a>
-    <nav class="nav" aria-label="Main">
-      <a href="#projects">Projects</a>
-      <a href="#updates" class="hide-sm">Updates</a>
-      <a href="#experience" class="hide-sm">Experience</a>
-      <a href="/assets/Lagnesh_Mahapatra_CV.pdf">CV</a>
-      <button class="theme-toggle" type="button" aria-label="Switch light or dark theme">
-        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
-    </nav>
+    <div class="topbar">
+      <a class="brand" href="/">Lagnesh Mahapatra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="#research" class="hide-sm">Research</a>
+        <a href="#projects">Projects</a>
+        <a href="#bio" class="hide-sm">Bio</a>
+        <a href="/assets/Lagnesh_Mahapatra_CV.pdf">CV</a>
+      </nav>
+    </div>
+
+    <div class="intro">
+      <img class="portrait" src="/assets/img/photo.webp" width="400" height="400" alt="Lagnesh Mahapatra at the IIT Bombay degree ceremony">
+      <div>
+        <p class="statement">Teaching robots physical skills, first in simulation, then on hardware I build myself.</p>
+        <div class="social">
+          <a href="https://github.com/Lagnesh2003" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</a>
+          <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>LinkedIn</a>
+          <a href="/assets/Lagnesh_Mahapatra_CV.pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>CV</a>
+          <span>Contact: <a class="addr" href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a></span>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
-<main id="main">
+<main id="main" class="wrap page">
 
-  <!-- ============================== HERO ============================== -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <img class="portrait" src="/assets/img/photo.webp" width="400" height="400" alt="Lagnesh Mahapatra at the IIT Bombay degree distribution ceremony">
-      <div class="hero-text">
-      <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span>Open to robot learning roles · RL &amp; VLA</div>
-      <h1>Lagnesh Mahapatra</h1>
-      <p class="lead">I build robot learning systems end to end: simulation, reinforcement learning, imitation and vision-language-action policies, and the hardware they run on.</p>
-      <p class="sub">Before robot learning I worked on guidance, navigation and control for launch vehicles and spacecraft at Skyroot Aerospace, and I now work on perception and autonomy at LAT Aerospace. IIT Bombay, CPI 9.36. I report every result with seeds and confidence intervals, including what did not work.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="/assets/Lagnesh_Mahapatra_CV.pdf">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M12 12v6M9 15l3 3 3-3"/></svg>
-          CV (PDF)
-        </a>
-        <a class="btn" href="https://github.com/Lagnesh2003">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
-          GitHub
-        </a>
-        <a class="btn" href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>
-          LinkedIn
-        </a>
-        <a class="btn" href="mailto:lagnesh22@gmail.com">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
-          Email
-        </a>
-      </div>
-      </div>
-    </div>
+  <section>
+    <h2 class="hello">Hi, I’m Lagnesh!</h2>
+    <p>I work on robot learning: reinforcement learning and vision-language-action models that control real robots. I build the whole stack myself, from MuJoCo environments and training code to the robots on my desk: a pair of SO-101 arms for imitation learning and a Furuta pendulum I designed for learning on hardware.</p>
+    <p>I come to this from control. I spent a year as a GNC engineer at <a href="https://www.skyroot.in/">Skyroot Aerospace</a>, working on reaction control for the Vikram-1 launch vehicle and attitude control for CubeSats, and I now work on perception and autonomy at LAT Aerospace. That background shapes how I do learning: every policy is compared against a classical controller, every result is reported over seeds with confidence intervals, and I write down what did not work.</p>
+    <p>I graduated from <a href="https://www.iitb.ac.in/">IIT Bombay</a> in 2025 with a CPI of 9.36, rank 2 in my department. I’m looking for robot learning roles in RL and VLA. Email me at <a href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a>.</p>
   </section>
 
-  <!-- ============================== HEADLINE NUMBERS ============================== -->
-  <section aria-label="Headline results">
-    <div class="wrap">
-      <div class="stats">
-        <div class="stat">
-          <div class="num">10/10</div>
-          <div class="label">PPO seeds solve Furuta swing-up and balance, 100% success under ±30% mass, sensor noise and delay</div>
-          <div class="src">saferl-lab</div>
-        </div>
-        <div class="stat">
-          <div class="num">15–55×</div>
-          <div class="label">fewer environment samples to solve with SAC than with PPO</div>
-          <div class="src">saferl-lab</div>
-        </div>
-        <div class="stat">
-          <div class="num">74%</div>
-          <div class="label">ACT pick-and-place success on SO-101 in simulation, 50 unseen episodes</div>
-          <div class="src">VLA_SO101_Sprint</div>
-        </div>
-        <div class="stat">
-          <div class="num">14×</div>
-          <div class="label">lower test error from a residual (SimBa) world model than an MLP</div>
-          <div class="src">Deep_NN</div>
-        </div>
-      </div>
-    </div>
+  <section id="research">
+    <h2>Research interests</h2>
+    <ul class="themes">
+      <li><strong>Sample-efficient RL on real hardware.</strong> Robots should learn hard skills from minutes of real data without breaking themselves. I compare PPO and SAC against LQR and energy-based control in GPU simulation, and test them on a pendulum I am building.
+        <span class="key"><em>Key work:</em> <a href="/projects/saferl-lab.html">saferl-lab</a>, <a href="/projects/saferl-lab.html#hardware">Furuta pendulum rig</a></span></li>
+      <li><strong>Imitation learning and VLAs on low-cost arms.</strong> What does it take for a policy trained on a few hundred demonstrations to work on a cheap arm? I study it end to end on the SO-101: task, expert, data, training, and evaluation that says how much of a result is noise.
+        <span class="key"><em>Key work:</em> <a href="/projects/vla-so101.html">SO-101 pipeline</a>, <a href="/projects/vla-so101.html#results">ACT ablations</a></span></li>
+      <li><strong>World models.</strong> Learned dynamics that stay accurate over long rollouts and know when they are wrong, the base for model-based RL and safety filters.
+        <span class="key"><em>Key work:</em> <a href="/projects/deep-nn.html">Furuta world models</a>, <a href="/projects/deep-nn.html#uncertainty">uncertainty</a></span></li>
+    </ul>
   </section>
 
-  <!-- ============================== PROJECTS ============================== -->
-  <section class="section" id="projects">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Projects</h2>
-        <p>All active. Each links to a full write-up and the code.</p>
-      </div>
-
-      <div class="projects">
-
-        <!-- ---------- Project 1: VLA on SO-101 ---------- -->
-        <article class="project">
-          <a class="project-media" href="/projects/vla-so101.html" aria-hidden="true" tabindex="-1">
-            <img src="/assets/img/so101-filmstrip.webp" width="1280" height="480" alt="Simulated SO-101 arm picking a red cube and placing it in a blue bin, eight frames from hover to release">
-          </a>
-          <div class="project-body">
-            <div class="meta-row"><span class="pill live">Active</span><span class="pill">Imitation learning · VLA</span><span class="pill">Sim + real arm</span></div>
-            <h3><a href="/projects/vla-so101.html">VLA policies on the SO-101 arm, sim to real</a></h3>
-            <p class="tagline">A full pipeline on a low-cost 6-DoF arm: MuJoCo task, IK expert, demonstrations, ACT training and evaluation, then a real leader–follower arm pair for real data and VLA fine-tuning.</p>
-            <ul class="results">
-              <li><span class="v">74%</span><span>ACT success on unseen episodes; replanning every 10 steps instead of 50 raised it from 58%</span></li>
-              <li><span class="v">95%</span><span>scripted IK expert success with DART noise (100% without noise)</span></li>
-              <li><span class="v">~7×</span><span>faster demonstration rendering after profiling found it running on the integrated GPU</span></li>
-            </ul>
-            <ul class="tags"><li>LeRobot</li><li>ACT</li><li>MuJoCo</li><li>mink IK</li><li>DART</li><li>PyTorch</li></ul>
-            <div class="card-links">
-              <a href="/projects/vla-so101.html">Read case study <span class="arrow">→</span></a>
-              <a href="https://github.com/Lagnesh2003/VLA_SO101_Sprint">Code</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- ---------- Project 2: saferl-lab ---------- -->
-        <article class="project">
-          <a class="project-media" href="/projects/saferl-lab.html" aria-hidden="true" tabindex="-1">
-            <img src="/assets/img/ppo-v3-curves.webp" width="1400" height="525" alt="PPO evaluation return and success rate versus environment steps on the Furuta swing-up task, 10 seeds, reaching 100% success by 10 million steps">
-          </a>
-          <div class="project-body">
-            <div class="meta-row"><span class="pill live">Active</span><span class="pill">Reinforcement learning</span><span class="pill">Hardware build</span></div>
-            <h3><a href="/projects/saferl-lab.html">saferl-lab: sample-efficient RL for real robots</a></h3>
-            <p class="tagline">PPO and SAC on a GPU-simulated Furuta pendulum (swing-up and balance), compared against LQR and energy-based control under a strict 10-seed protocol. A real pendulum is being built to test them.</p>
-            <ul class="results">
-              <li><span class="v">100%</span><span>PPO success, 10/10 seeds, with higher return than a hand-designed controller (479 vs 435)</span></li>
-              <li><span class="v">0.15M</span><span>steps for SAC with LayerNorm critics to reach 100% success, about 15× fewer than PPO</span></li>
-              <li><span class="v">66 s</span><span>per 20M-step PPO run on a laptop GPU, down from 6 min, using CUDA graphs</span></li>
-            </ul>
-            <ul class="tags"><li>PPO</li><li>SAC</li><li>MuJoCo Warp</li><li>CUDA graphs</li><li>LQR / iLQR</li><li>Domain randomization</li></ul>
-            <div class="card-links">
-              <a href="/projects/saferl-lab.html">Read case study <span class="arrow">→</span></a>
-              <a href="https://github.com/Lagnesh2003/saferl-lab">Code</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- ---------- Project 3: Deep_NN ---------- -->
-        <article class="project">
-          <a class="project-media" href="/projects/deep-nn.html" aria-hidden="true" tabindex="-1">
-            <img src="/assets/img/wm-rollout-error.webp" width="1005" height="424" alt="Pendulum angle and speed error over 50 rollout steps: the neural world model stays 10 to 100 times below a linear model">
-          </a>
-          <div class="project-body">
-            <div class="meta-row"><span class="pill live">Active</span><span class="pill">Deep learning</span><span class="pill">World models</span></div>
-            <h3><a href="/projects/deep-nn.html">Deep learning from scratch, through world models</a></h3>
-            <p class="tagline">Backprop, optimizers, normalization, LSTM and attention written by hand and checked against PyTorch, all applied to one problem: a learned dynamics model of the Furuta pendulum.</p>
-            <ul class="results">
-              <li><span class="v">~2000×</span><span>lower one-step error than the best linear model</span></li>
-              <li><span class="v">14×</span><span>lower test error with a 4.2M-parameter SimBa model; 50-step rollout error 0.176 → 0.078 rad</span></li>
-              <li><span class="v">20 µs</span><span>of GPU work per Transformer prediction, using a hand-written Triton KV-cache kernel</span></li>
-            </ul>
-            <ul class="tags"><li>PyTorch</li><li>Transformer</li><li>LSTM</li><li>SimBa</li><li>Triton</li><li>Uncertainty</li></ul>
-            <div class="card-links">
-              <a href="/projects/deep-nn.html">Read case study <span class="arrow">→</span></a>
-              <a href="https://github.com/Lagnesh2003/Deep_NN">Code</a>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
+  <section>
+    <h2>Latest</h2>
+    <figure class="feature">
+      <video src="/assets/video/act-sim-rollouts.mp4" poster="/assets/video/act-sim-rollouts.webp" width="640" height="480" autoplay muted loop playsinline preload="metadata" aria-label="Simulated SO-101 arm running an ACT policy: three pick-and-place episodes on unseen seeds"></video>
+      <figcaption>My ACT policy on the simulated SO-101, the first three evaluation episodes on unseen seeds, unedited. Over 50 episodes it succeeds 74% of the time; the <a href="/projects/vla-so101.html#results">write-up</a> shows where the other 26% fail.</figcaption>
+    </figure>
   </section>
 
-  <!-- ============================== UPDATES ==============================
-       To add an update: copy one <li> block, paste it at the TOP of the list,
-       change the date, text and project tag. Keep 6–10 entries.
-  -->
-  <section class="section" id="updates">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Updates</h2>
-        <p>Newest first.</p>
-      </div>
-      <ol class="timeline">
-        <li>
-          <time datetime="2026-11-09">9 Nov 2026</time>
-          <div class="what"><strong>ACT in simulation: 74% pick-and-place success.</strong> Ablations over demonstrations, replanning interval, DART noise and chunk size, with failure types for every episode. <span class="proj">VLA_SO101</span></div>
-        </li>
-        <li>
-          <time datetime="2026-11-08">8 Nov 2026</time>
-          <div class="what"><strong>Real SO-101 follower arm brought up.</strong> Motor IDs, calibration, sim-to-real joint mapping checked by hand, software joint limits and a temperature cut-off. <span class="proj">VLA_SO101</span></div>
-        </li>
-        <li>
-          <time datetime="2026-11-08">8 Nov 2026</time>
-          <div class="what"><strong>A world model that reports its own uncertainty.</strong> β-NLL gives calibrated error bars; an ensemble did not detect changed physics, so an online surprise check is next. <span class="proj">Deep_NN</span></div>
-        </li>
-        <li>
-          <time datetime="2026-11-07">7 Nov 2026</time>
-          <div class="what"><strong>Modern Transformer world model.</strong> RoPE + RMSNorm + SwiGLU give the best 50-step rollouts of the angle-only models; the KV-cache step runs as one Triton kernel. <span class="proj">Deep_NN</span></div>
-        </li>
-        <li>
-          <time datetime="2026-10">Oct 2026</time>
-          <div class="what"><strong>Made SAC reliable on the pendulum.</strong> A critic probe showed critic noise was 5–10× the signal near upright; LayerNorm critics gave 100% success with about 15× fewer samples than PPO. <span class="proj">saferl-lab</span></div>
-        </li>
-        <li>
-          <time datetime="2026-10">Oct 2026</time>
-          <div class="what"><strong>PPO solves Furuta swing-up, 10/10 seeds.</strong> Fixed a reward loophole, an observation gap and simulator blow-ups that scored as success; a 20M-step run takes 66 s on the GPU. <span class="proj">saferl-lab</span></div>
-        </li>
-        <li>
-          <time datetime="2026-10-03">3 Oct 2026</time>
-          <div class="what"><strong>Classical baselines done.</strong> PID and LQR balance plus an energy-based swing-up, used as the reference every RL result is compared against. <span class="proj">saferl-lab</span></div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ============================== EXPERIENCE ============================== -->
-  <section class="section" id="experience">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Experience</h2>
-        <p>Control, estimation and flight software, the base I bring to robot learning.</p>
-      </div>
-      <div class="two-col">
-        <ol class="xp">
-          <li>
-            <div class="xp-head"><h3>Perception &amp; Autonomy Engineer <span class="org">· LAT Aerospace</span></h3><span class="when">Feb 2026 – now</span></div>
-            <p>EO/IR fused object detection and multi-object tracking (YOLO, RF-DETR), track-before-detect for sub-pixel targets, and a GNSS-denied visual-inertial SLAM pipeline (camera, IMU, rangefinder; OpenVINS) benchmarked against GPS. Monte Carlo sensitivity analysis for the Lat One uSTOL demonstrator.</p>
-          </li>
-          <li>
-            <div class="xp-head"><h3>GNC Engineer <span class="org">· Skyroot Aerospace</span></h3><span class="when">Dec 2024 – Jan 2026</span></div>
-            <p>Reaction-control-system design for the Vikram-1 launch vehicle, OILS and HILS testing of CubeSat ADCS algorithms, a differential-evolution optimizer for the optimal descent trajectory of reusable stages, and the full ADCS flight software stack. “Silent Star” award, 2025.</p>
-          </li>
-          <li>
-            <div class="xp-head"><h3>GNC Intern <span class="org">· Skyroot Aerospace</span></h3><span class="when">May – Jul 2024</span></div>
-            <p>Attitude autopilot with flex-nozzle control for several flight phases; a 6-DoF CubeSat model in C with detumbling and attitude-tracking controllers.</p>
-          </li>
-          <li>
-            <div class="xp-head"><h3>Trajectory Optimization Intern <span class="org">· DRDL, DRDO</span></h3><span class="when">Dec 2023 – Jan 2024</span></div>
-            <p>Constrained re-entry trajectory optimization for a hypersonic vehicle using the Gauss pseudospectral method.</p>
-          </li>
-          <li>
-            <div class="xp-head"><h3>Flight Dynamics Intern <span class="org">· CSIR-NAL</span></h3><span class="when">Jun – Jul 2023</span></div>
-            <p>Integrated a custom attitude controller into ArduPilot; linear and nonlinear observer design for a hypersonic aircraft.</p>
-          </li>
-        </ol>
+  <section id="projects">
+    <h2>Projects</h2>
+    <p class="aside">All ongoing. Each has a full write-up with every number, and the code on GitHub.</p>
+    <ol class="entries">
+      <li class="entry">
+        <a href="/projects/vla-so101.html" tabindex="-1" aria-hidden="true"><img class="thumb" src="/assets/img/thumb-vla.webp" width="360" height="360" alt="" loading="lazy"></a>
         <div>
-          <div class="panel">
-            <h3>Education</h3>
-            <ul>
-              <li><strong>IIT Bombay</strong>, 2021–2025. CPI 9.36/10, department rank 2 of 77</li>
-              <li>Institute Academic Prize, 2022–23 and 2023–24</li>
-              <li>JEE Advanced AIR 2118 (2021)</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h3>Publication</h3>
-            <ul>
-              <li>L. Mahapatra, O. Halbe. <a href="https://doi.org/10.1016/j.ifacol.2024.05.017">Robust Aeroelastic Response Estimation for Flexible Aircraft</a>. <em>IFAC-PapersOnLine</em>, 2024.</li>
-            </ul>
-          </div>
+          <h3><a href="/projects/vla-so101.html">Imitation Learning and VLAs on the SO-101 Arm, Sim to Real</a></h3>
+          <p class="by"><strong>L Mahapatra</strong> · Oct 2026 – now</p>
+          <p class="hl">74% success on unseen episodes · real arm brought up</p>
+          <p class="desc">Simulated task, differential-IK expert with DART noise, ACT training and ablations, then a real leader–follower arm pair for real data and VLA fine-tuning.</p>
+          <div class="links"><a href="/projects/vla-so101.html">Write-up</a><a href="https://github.com/Lagnesh2003/VLA_SO101_Sprint">Code</a><a href="https://github.com/Lagnesh2003/VLA_SO101_Sprint/blob/main/notes/main.pdf">Notes</a><a href="/assets/video/act-sim-rollouts.mp4">Video</a></div>
         </div>
-      </div>
-    </div>
+      </li>
+      <li class="entry">
+        <a href="/projects/saferl-lab.html" tabindex="-1" aria-hidden="true"><img class="thumb" src="/assets/img/thumb-ppo.webp" width="360" height="360" alt="" loading="lazy"></a>
+        <div>
+          <h3><a href="/projects/saferl-lab.html">saferl-lab: Sample-Efficient RL for Real Robots</a></h3>
+          <p class="by"><strong>L Mahapatra</strong> · Sep 2026 – now</p>
+          <p class="hl">10/10 seeds · 15–55× fewer samples with SAC</p>
+          <p class="desc">PPO and SAC on a GPU-simulated Furuta pendulum under a 10-seed protocol with robustness tests, against LQR and energy-based swing-up. A 20M-step run takes 66 s.</p>
+          <div class="links"><a href="/projects/saferl-lab.html">Write-up</a><a href="https://github.com/Lagnesh2003/saferl-lab">Code</a><a href="https://github.com/Lagnesh2003/saferl-lab/blob/main/docs/results.md">Results</a></div>
+        </div>
+      </li>
+      <li class="entry">
+        <a href="/projects/saferl-lab.html#hardware" tabindex="-1" aria-hidden="true"><img class="thumb" src="/assets/img/thumb-furuta-cad.webp" width="360" height="360" alt="" loading="lazy"></a>
+        <div>
+          <h3><a href="/projects/saferl-lab.html#hardware">A Furuta Pendulum for Learning on Hardware</a></h3>
+          <p class="by"><strong>L Mahapatra</strong> · Oct 2026 – now</p>
+          <p class="hl">CAD done, 71 checks pass · parts and prints ordered</p>
+          <p class="desc">Gimbal motor with field-oriented control, two 21-bit magnetic encoders and a Teensy 4.1 running a 1 kHz loop, on a budget under ₹1 lakh. A 64×64 policy runs on the Teensy in 77 µs.</p>
+          <div class="links"><a href="/projects/saferl-lab.html#hardware">Build notes</a></div>
+        </div>
+      </li>
+      <li class="entry">
+        <a href="/projects/deep-nn.html" tabindex="-1" aria-hidden="true"><img class="thumb" src="/assets/img/thumb-attention.webp" width="360" height="360" alt="" loading="lazy"></a>
+        <div>
+          <h3><a href="/projects/deep-nn.html">Deep Learning from Scratch, through World Models</a></h3>
+          <p class="by"><strong>L Mahapatra</strong> · Oct 2026 – now</p>
+          <p class="hl">14× lower error with SimBa · Triton KV-cache kernel</p>
+          <p class="desc">Backprop, normalization, LSTM and attention written by hand and checked against PyTorch, all applied to one problem: a learned dynamics model of the Furuta pendulum.</p>
+          <div class="links"><a href="/projects/deep-nn.html">Write-up</a><a href="https://github.com/Lagnesh2003/Deep_NN">Code</a><a href="https://github.com/Lagnesh2003/Deep_NN/blob/main/LOG.md">Log</a></div>
+        </div>
+      </li>
+    </ol>
   </section>
 
-  <!-- ============================== SKILLS ============================== -->
-  <section class="section" id="skills">
-    <div class="wrap">
-      <div class="section-head"><h2>Skills</h2></div>
-      <div class="skills">
-        <div class="skill">
-          <h3>Reinforcement learning</h3>
-          <p>PPO, SAC (10 seeds trained at once on one GPU), reward and observation design, domain randomization, evaluation with IQM and bootstrap confidence intervals.</p>
+  <section>
+    <h2>Publications</h2>
+    <ol class="entries">
+      <li class="entry">
+        <div class="thumb thumb-type" aria-hidden="true"><div><b>IFAC</b><span>PapersOnLine 2024</span></div></div>
+        <div>
+          <h3><a href="https://doi.org/10.1016/j.ifacol.2024.05.017">Robust Aeroelastic Response Estimation for Flexible Aircraft</a></h3>
+          <p class="by"><strong>L Mahapatra</strong>, O Halbe</p>
+          <p class="hl">IFAC-PapersOnLine, 2024</p>
+          <div class="links"><a href="https://doi.org/10.1016/j.ifacol.2024.05.017">Paper</a></div>
         </div>
-        <div class="skill">
-          <h3>Imitation learning &amp; VLA</h3>
-          <p>LeRobot, ACT, scripted experts with DART noise, demonstration pipelines, leader–follower teleoperation on the SO-101.</p>
-        </div>
-        <div class="skill">
-          <h3>Deep learning &amp; world models</h3>
-          <p>PyTorch, MLP / SimBa / LSTM / Transformer dynamics models, uncertainty (β-NLL, ensembles), CUDA graphs, Triton kernels, bf16.</p>
-        </div>
-        <div class="skill">
-          <h3>Simulation, control &amp; estimation</h3>
-          <p>MuJoCo and MuJoCo Warp, Gymnasium, differential IK (mink); LQR, iLQR/TVLQR, energy swing-up; visual-inertial SLAM; Python, C/C++, MATLAB.</p>
-        </div>
-      </div>
-    </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="updates">
+    <h2>Updates</h2>
+    <!-- Newest first. To add one: copy a <li>, paste it at the top, edit. Keep about 8. -->
+    <ol class="updates">
+      <li><time datetime="2026-11-09">9 Nov 2026</time><span>ACT in simulation reaches 74% pick-and-place success; ablations over demos, replanning, DART and chunk size written up.</span></li>
+      <li><time datetime="2026-11-08">8 Nov 2026</time><span>Real SO-101 follower arm brought up: calibration, sim-to-real joint mapping, software limits, temperature cut-off.</span></li>
+      <li><time datetime="2026-11-08">8 Nov 2026</time><span>A world model that reports calibrated uncertainty (β-NLL). An ensemble did not detect changed physics.</span></li>
+      <li><time datetime="2026-11-07">7 Nov 2026</time><span>Modern Transformer world model (RoPE, RMSNorm, SwiGLU); the KV-cache step as one Triton kernel.</span></li>
+      <li><time datetime="2026-11-01">1 Nov 2026</time><span>Furuta pendulum CAD finished: 9 printed parts, a 71-check audit, PETG print order placed.</span></li>
+      <li><time datetime="2026-10">Oct 2026</time><span>SAC made reliable with LayerNorm critics: 100% success with about 15× fewer samples than PPO.</span></li>
+      <li><time datetime="2026-10">Oct 2026</time><span>PPO solves Furuta swing-up on 10/10 seeds, robust to mass, noise and delay.</span></li>
+      <li><time datetime="2026-10-13">13 Oct 2026</time><span>First firmware on the Teensy 4.1: an exact 1 kHz loop, and a 64×64 MLP policy in 77 µs.</span></li>
+    </ol>
+  </section>
+
+  <section id="bio">
+    <h2>Bio</h2>
+    <p>Lagnesh Mahapatra is a Perception &amp; Autonomy Engineer at LAT Aerospace, working on detection, tracking and GNSS-denied visual-inertial navigation. Previously a GNC engineer at Skyroot Aerospace, with internships at DRDO (trajectory optimization) and CSIR-NAL (flight control). Graduated from IIT Bombay in 2025 with the Institute Academic Prize, awarded twice. Independent work in robot learning: reinforcement learning, imitation learning and world models, from simulation to real hardware.</p>
+    <ul class="xp">
+      <li><span><span class="role">Perception &amp; Autonomy Engineer</span> <span class="org">· LAT Aerospace</span></span><span class="when">Feb 2026 – now</span></li>
+      <li><span><span class="role">GNC Engineer</span> <span class="org">· Skyroot Aerospace</span></span><span class="when">Dec 2024 – Jan 2026</span></li>
+      <li><span><span class="role">GNC Intern</span> <span class="org">· Skyroot Aerospace</span></span><span class="when">May – Jul 2024</span></li>
+      <li><span><span class="role">Trajectory Optimization Intern</span> <span class="org">· DRDL, DRDO</span></span><span class="when">Dec 2023 – Jan 2024</span></li>
+      <li><span><span class="role">Flight Dynamics Intern</span> <span class="org">· CSIR-NAL</span></span><span class="when">Jun – Jul 2023</span></li>
+      <li><span><span class="role">Undergraduate, CPI 9.36</span> <span class="org">· IIT Bombay</span></span><span class="when">2021 – 2025</span></li>
+    </ul>
   </section>
 
 </main>
 
-<footer class="site-footer" id="contact">
+<footer class="site-footer">
   <div class="wrap">
-    <div>
-      <h2>Get in touch</h2>
-      <p>I am looking for robot learning roles in RL and VLA. The fastest way to reach me is email.</p>
-    </div>
+    <p>© 2026 Lagnesh Mahapatra · Updated 9 Nov 2026</p>
     <div class="footer-links">
       <a href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a>
       <a href="tel:+918249043321">+91 82490 43321</a>
-      <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">LinkedIn</a>
       <a href="https://github.com/Lagnesh2003">GitHub</a>
+      <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">LinkedIn</a>
     </div>
-    <div class="footer-note">Last updated 9 Nov 2026</div>
   </div>
 </footer>
-
-<script src="/assets/js/main.js" defer></script>
 </body>
 </html>
