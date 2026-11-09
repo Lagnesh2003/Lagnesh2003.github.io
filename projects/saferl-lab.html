@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>saferl-lab: sample-efficient RL for real robots · Lagnesh Mahapatra</title>
+  <meta name="description" content="PPO and SAC on a GPU-simulated Furuta pendulum under a strict 10-seed evaluation protocol: 100% success, robustness to mass, noise and delay, 15–55× sample-efficiency gains with SAC, and a real pendulum build.">
+  <link rel="canonical" href="https://lagnesh2003.github.io/projects/saferl-lab.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lagnesh2003.github.io/projects/saferl-lab.html">
+  <meta property="og:title" content="saferl-lab: sample-efficient RL for real robots">
+  <meta property="og:description" content="PPO solves Furuta swing-up on 10/10 seeds; SAC with LayerNorm critics reaches 100% success with ~15× fewer samples.">
+  <meta property="og:image" content="https://lagnesh2003.github.io/assets/img/ppo-v3-curves.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lagnesh Mahapatra, home"><span class="brand-mark">LM</span><span class="brand-name">Lagnesh Mahapatra</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/#projects">Projects</a>
+      <a href="/#updates" class="hide-sm">Updates</a>
+      <a href="/#experience" class="hide-sm">Experience</a>
+      <a href="/assets/Lagnesh_Mahapatra_CV.pdf">CV</a>
+      <button class="theme-toggle" type="button" aria-label="Switch light or dark theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <div class="crumbs"><a href="/#projects">← All projects</a></div>
+
+  <section class="case-hero">
+    <div class="meta-row"><span class="pill live">Active · updated Nov 2026</span><span class="pill">Reinforcement learning</span><span class="pill next">Hardware in progress</span></div>
+    <h1>saferl-lab: sample-efficient RL for real robots</h1>
+    <p class="lead">The goal: robots that learn hard physical skills in minutes on real hardware, without breaking themselves. The software half compares RL algorithms against classical control in simulation under a strict protocol. The hardware half is a home-built Furuta pendulum (and later a hopping leg) where those methods get tested for real.</p>
+    <dl class="facts">
+      <div><dt>Task</dt><dd>Furuta pendulum swing-up + balance, 100 Hz, torque ≤ 0.15 N·m</dd></div>
+      <div><dt>Methods</dt><dd>PPO, SAC, LQR, iLQR + TVLQR, energy swing-up</dd></div>
+      <div><dt>Simulation</dt><dd>MuJoCo (CPU) and MuJoCo Warp (GPU), same physics</dd></div>
+      <div><dt>Links</dt><dd><a href="https://github.com/Lagnesh2003/saferl-lab">Code</a> · <a href="https://github.com/Lagnesh2003/saferl-lab/blob/main/docs/results.md">Full results</a></dd></div>
+    </dl>
+  </section>
+
+  <div class="prose">
+    <h2>Evaluation protocol</h2>
+    <p>Every number on this page uses the same protocol: 10 training seeds, one evaluator with 100 fixed start states and deterministic actions, the interquartile mean (IQM, the mean of the middle 50% of seeds) with a 95% bootstrap confidence interval, and six robustness conditions. Before I fixed the protocol, my conclusions flipped three times.</p>
+
+    <h2>Headline result</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th class="n">Seeds solved</th><th class="n">Success, IQM [95% CI]</th><th class="n">Return, IQM [95% CI]</th></tr></thead>
+      <tbody>
+        <tr><td>PPO, first environment version</td><td class="n">3/10</td><td class="n">16% [0, 65]</td><td class="n">−307 [−513, 134]</td></tr>
+        <tr class="best"><td>PPO, final setup (20M steps, ~66 s per seed)</td><td class="n">10/10</td><td class="n">100% [100, 100]</td><td class="n">479.0 [478.0, 479.9]</td></tr>
+        <tr><td>Energy-shaping swing-up + LQR (hand-designed)</td><td class="n">n/a</td><td class="n">100%</td><td class="n">435.1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="wide">
+    <div class="frame"><img src="/assets/img/ppo-v3-curves.webp" width="1400" height="525" alt="Evaluation return and success rate versus environment steps for PPO on FurutaSwingup-v3; IQM with 95% CI across 10 seeds; success reaches 100% by 10 million steps"></div>
+    <figcaption>PPO on the final environment: evaluation return and success vs environment steps, IQM and 95% CI across 10 seeds.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h3>Robustness of the final policies</h3>
+    <p>Trained with domain randomization (pendulum mass ±30%, sensor noise, 10 ms delay, wide starts); the policy is never told the values. It cost nothing at nominal conditions. The hand-designed controller drops to 99% under the delay.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="n">Nominal</th><th class="n">Mass ×0.7</th><th class="n">Mass ×1.3</th><th class="n">Sensor noise</th><th class="n">10 ms delay</th><th class="n">Wide starts</th></tr></thead>
+      <tbody><tr><td class="n">100%</td><td class="n">100%</td><td class="n">100%</td><td class="n">100% [99, 100]</td><td class="n">100%</td><td class="n">100%</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h2>What took PPO from 3/10 to 10/10 seeds</h2>
+    <ul>
+      <li><strong>An observation gap.</strong> The arm angle was given only as cos/sin, which repeat every turn, so the policy could not see it was winding the arm toward its 2-turn limit. Fix: add the unwrapped angle.</li>
+      <li><strong>A “quit” loophole in the reward.</strong> Ending the episode cost the same as hanging still, so winding the arm into the limit was never worse than doing nothing; 7 of 10 seeds settled on hanging still. Fix: hanging earns 0 and upright earns +1, so ending is clearly the worst option.</li>
+      <li><strong>Simulator blow-ups that looked like success.</strong> CPU MuJoCo resets an unstable simulation to its default pose, upright and at rest, which scored as a perfect balance. Fix: detect blow-ups identically on CPU and GPU and penalize them.</li>
+      <li><strong>Training details.</strong> Bootstrapping at time-outs, domain randomization, a constant learning rate and a small entropy bonus.</li>
+    </ul>
+    <div class="callout honest">
+      <div class="t">Caveat</div>
+      <p>These fixes went in together, so the share of each one is not measured.</p>
+    </div>
+
+    <h2>Sample efficiency: PPO</h2>
+    <p>Environment steps until success ≥ 95% in two evaluations in a row, millions of steps, IQM [95% CI], 10 seeds each. Every variant still ends at 100% success in all six robustness conditions.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>PPO variant (one change each vs the baseline)</th><th class="n">Steps to solve (M)</th></tr></thead>
+      <tbody>
+        <tr><td>Baseline: 4096 envs × 24 steps</td><td class="n">7.62 [4.55, 10.52]</td></tr>
+        <tr><td>Entropy bonus annealed 0.05 → 0.005 over 3M steps</td><td class="n">6.29 [3.95, 8.88]</td></tr>
+        <tr><td>Per-env exploration noise ×1/3 to ×3, annealed</td><td class="n">6.23 [4.37, 8.14]</td></tr>
+        <tr><td>100% wide starts, speeds ±2 rad/s</td><td class="n">5.21 [2.88, 8.21]</td></tr>
+        <tr><td>100% wide starts, speeds ±8 rad/s</td><td class="n">3.38 [2.64, 5.55]</td></tr>
+        <tr><td>100% wide starts, speeds ±12 rad/s</td><td class="n">2.88 [2.39, 4.05]</td></tr>
+        <tr><td>1024 envs (same minibatch size, 4× fresher data)</td><td class="n">2.68 [2.34, 3.69]</td></tr>
+        <tr class="best"><td>1024 envs + wide starts ±8 rad/s</td><td class="n">2.43 [2.02, 3.01]</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Fresher data and covering fast states from the start help; exploration-noise tweaks barely matter.</p>
+
+  <div class="prose">
+    <h2>SAC: 55× fewer samples, but it would not hold still</h2>
+    <p>SAC (10 seeds trained at once in one process on the GPU) solved every seed in 25k–65k steps, a few minutes of real-robot data, but did not stay solved: its policy never balanced still.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Environment v3</th><th class="n">Steps to solve</th><th class="n">Final success</th><th class="n">10 ms delay</th><th class="n">Wide starts</th></tr></thead>
+      <tbody>
+        <tr><td>PPO (best variant)</td><td class="n">2.43M</td><td class="n">100%</td><td class="n">100%</td><td class="n">100%</td></tr>
+        <tr><td>SAC</td><td class="n">0.044M [0.04, 0.05]</td><td class="n">91% [53, 100]</td><td class="n">29%</td><td class="n">66%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h3>Diagnosis</h3>
+    <p>I probed the critics on states near upright. Holding still versus a slight wobble was worth about 0.05 out of a value of about 90, while the two critics disagreed by about 0.3: critic noise was 5–10× the signal. With the pendulum perfectly still, where the correct action is 0, the critics preferred +0.57, −1.0 and −0.73, so the policy kicked a balanced pendulum. Lower target entropy, an action-smoothness penalty, and observation and reward normalization did not fix it.</p>
+    <h3>Fix: pay for stillness, then fix the critic</h3>
+    <p>Environment v4 pays half of the upright reward only for holding still, so stillness is worth about 40 in value instead of about 0.1. PPO learned it. SAC still did not, until LayerNorm in the critics: the bottleneck was critic accuracy, not the reward alone.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Environment v4, 10 seeds</th><th class="n">Steps to solve</th><th class="n">Final success</th><th class="n">Worst robustness</th><th class="n">Return</th></tr></thead>
+      <tbody>
+        <tr><td>PPO (1024 envs + wide fast starts)</td><td class="n">2.18M [1.85, 2.42]</td><td class="n">100%</td><td class="n">100%</td><td class="n">392 [369, 414]</td></tr>
+        <tr class="best"><td>PPO tuned (γ 0.995, no entropy bonus, annealed lr, λ 0.98, 256-256)</td><td class="n">1.93M [1.52, 4.18]</td><td class="n">100%</td><td class="n">100%</td><td class="n">404.5 [388, 425]</td></tr>
+        <tr><td>SAC</td><td class="n">0.08M [0.06, 0.12]</td><td class="n">67% [17, 100]</td><td class="n">68%</td><td class="n">289 [264, 311]</td></tr>
+        <tr class="best"><td>SAC + LayerNorm critics</td><td class="n">0.15M [0.12, 0.18]</td><td class="n">100% [83, 100]</td><td class="n">85%</td><td class="n">295 [259, 327]</td></tr>
+        <tr><td>SAC, batch 1024 / 2048</td><td class="n">0.04M / 0.08M</td><td class="n">66% / 59%</td><td class="n">66% / 39%</td><td class="n">273 / 259</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Realistic return ceiling on v4 is about 450 (the swing-up itself costs about 50). Tuned PPO holds the pendulum essentially motionless in 9 of 10 seeds; SAC with LayerNorm is reliable at about 15× fewer samples but still wobbles more.</p>
+
+  <div class="prose">
+    <h2>Longer training is not better</h2>
+    <p>6 seeds × 450M steps: the best seeds reach 482 (vs 479), but 2 of 6 drifted after peaking around 20M steps, to a swing-up that leaves the arm 1.2–1.4 turns from home. Exploration noise had collapsed to σ ≈ 0.015, and γ = 0.99 (about a 1 s horizon) hides the slow arm cost. Final IQM success fell to 75% [25, 100]. Budget set to 20M steps.</p>
+  </div>
+  <figure class="wide">
+    <div class="frame"><img src="/assets/img/ppo-long-run-curves.webp" width="1400" height="525" alt="PPO evaluation curves over 450 million steps; two of six seeds drift down after peaking" loading="lazy"></div>
+    <figcaption>450M-step runs: two of six seeds drift after their peak.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>Engineering: a 20M-step run in 66 seconds</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stage (RTX 3070 Ti laptop GPU)</th><th class="n">20M-step run</th></tr></thead>
+      <tbody>
+        <tr><td>First GPU PPO</td><td class="n">~6 min</td></tr>
+        <tr><td>Graphed gradient step, no CPU–GPU waits in the rollout</td><td class="n">~95 s</td></tr>
+        <tr class="best"><td>Whole rollout + GAE and whole update as CUDA graphs; batched evaluation</td><td class="n">~66 s</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Without CUDA graphs the same algorithm is 2.2× slower; with them, every seed's final return was unchanged. Same seed on the same GPU gives identical runs.</p>
+
+  <div class="prose">
+    <h2>Hardware: the real pendulum</h2>
+    <p>The real rig is being built on a budget under ₹1 lakh for the year: a gimbal motor with SimpleFOC field-oriented control, magnetic encoders and a Teensy 4.1. The firmware safety layer comes first: torque limit, arm-angle limit, a 50 ms watchdog and an e-stop.</p>
+    <ul class="next-list">
+      <li>System identification (inertia, friction, motor constant) and an updated simulation model, with a sim-vs-real plot.</li>
+      <li>Gate: LQR balances the real pendulum for at least 60 s.</li>
+      <li>Sim-to-real: a domain-randomized policy swings up and balances on hardware.</li>
+      <li>Gate: the pendulum learns swing-up from scratch on hardware in under 10 minutes of robot time.</li>
+    </ul>
+
+    <h2>Next in software</h2>
+    <ul class="next-list">
+      <li>Higher update-to-data ratios for SAC (DroQ-style: dropout and LayerNorm critics).</li>
+      <li>SafeFast, a model-based method: an ensemble of learned dynamics models as a residual on physics, an MPPI planner, and a safety filter with an LQR backup controller.</li>
+    </ul>
+  </div>
+
+  <nav class="case-nav" aria-label="More projects">
+    <a href="/projects/vla-so101.html"><span>← Previous</span>VLA on the SO-101 arm</a>
+    <a class="r" href="/projects/deep-nn.html"><span>Next →</span>Deep learning from scratch</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <h2>Get in touch</h2>
+      <p>I am looking for robot learning roles in RL and VLA.</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a>
+      <a href="tel:+918249043321">+91 82490 43321</a>
+      <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">LinkedIn</a>
+      <a href="https://github.com/Lagnesh2003">GitHub</a>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

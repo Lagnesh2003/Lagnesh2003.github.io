@@ -1,0 +1,26 @@
+# Checks every link and image on the site after each push, and every Monday.
+# A red X on the commit means a link is broken: open the run to see which one.
+name: Check links
+
+on:
+  push:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --root-dir ${{ github.workspace }}
+            --exclude linkedin.com
+            --exclude fonts.googleapis.com
+            --exclude fonts.gstatic.com
+            --exclude lagnesh2003.github.io
+            './**/*.html'
+          fail: true

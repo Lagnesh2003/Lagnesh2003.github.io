@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLA policies on the SO-101 arm · Lagnesh Mahapatra</title>
+  <meta name="description" content="An end-to-end imitation learning and VLA pipeline on the SO-101 arm: MuJoCo task, differential-IK expert with DART noise, ACT training and evaluation with ablations, and real leader-follower hardware bring-up.">
+  <link rel="canonical" href="https://lagnesh2003.github.io/projects/vla-so101.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lagnesh2003.github.io/projects/vla-so101.html">
+  <meta property="og:title" content="VLA policies on the SO-101 arm, sim to real">
+  <meta property="og:description" content="ACT reaches 74% pick-and-place success on unseen simulated episodes. Pipeline, ablations, speedups and real-arm bring-up.">
+  <meta property="og:image" content="https://lagnesh2003.github.io/assets/img/so101-filmstrip.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lagnesh Mahapatra, home"><span class="brand-mark">LM</span><span class="brand-name">Lagnesh Mahapatra</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/#projects">Projects</a>
+      <a href="/#updates" class="hide-sm">Updates</a>
+      <a href="/#experience" class="hide-sm">Experience</a>
+      <a href="/assets/Lagnesh_Mahapatra_CV.pdf">CV</a>
+      <button class="theme-toggle" type="button" aria-label="Switch light or dark theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <div class="crumbs"><a href="/#projects">← All projects</a></div>
+
+  <section class="case-hero">
+    <div class="meta-row"><span class="pill live">Active · updated 9 Nov 2026</span><span class="pill">Imitation learning · VLA</span></div>
+    <h1>VLA policies on the SO-101 arm, sim to real</h1>
+    <p class="lead">I am building the whole learning pipeline for a low-cost robot arm myself: simulated task, scripted expert, demonstrations, policy training and evaluation, and a real leader–follower arm pair for real data. The simulation and the real arm share one interface, so a policy can move between them unchanged.</p>
+    <dl class="facts">
+      <div><dt>Robot</dt><dd>SO-101, 6× STS3215 servos, leader + follower</dd></div>
+      <div><dt>Stack</dt><dd>MuJoCo, mink, Gymnasium, LeRobot, PyTorch</dd></div>
+      <div><dt>Compute</dt><dd>RTX 3070 Ti laptop GPU</dd></div>
+      <div><dt>Links</dt><dd><a href="https://github.com/Lagnesh2003/VLA_SO101_Sprint">Code</a> · <a href="https://github.com/Lagnesh2003/VLA_SO101_Sprint/blob/main/notes/main.pdf">Notes (PDF)</a></dd></div>
+    </dl>
+  </section>
+
+  <figure class="wide">
+    <div class="frame flush"><img src="/assets/img/so101-filmstrip.webp" width="1280" height="480" alt="Eight frames of the simulated SO-101 arm: hover, descend, close, lift, transport, lower, release, success"></div>
+    <figcaption>The scripted expert solving the task in simulation: hover, descend, close, lift, transport, lower, release. Its rollouts become the training demonstrations.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>Task</h2>
+    <p>Pick a 4 cm cube and place it in a bin. The policy sees one fixed camera image (96×128) and the 6 joint angles, and outputs 6 joint-position targets at 30 Hz; physics runs at 480 Hz. Success is the environment's own test: the cube rests inside the bin, below the rim. I checked the success function by hand on 10 cases before trusting it.</p>
+
+    <h2>Pipeline</h2>
+    <ol>
+      <li><strong>Simulation.</strong> The official SO-101 model, extended in code with MuJoCo's <code>MjSpec</code> (cube, bin, cameras) and wrapped as a Gymnasium environment. The real arm is later wrapped to the same interface.</li>
+      <li><strong>Scripted expert.</strong> A waypoint state machine driving differential inverse kinematics, solved as a small quadratic program at every step (mink) with joint limits as hard constraints. The SO-101 has 5 arm joints and cannot reach every 6-D pose, so position is weighted high, gripper tilt moderately, and wrist roll follows the cube's yaw.</li>
+      <li><strong>Demonstrations with DART.</strong> The robot executes the expert's action plus correlated noise, but the label is the clean action. This shows the policy how to recover from states the expert never visits. 8 parallel workers; only successful episodes kept. 200 episodes = 31,078 frames.</li>
+      <li><strong>Training.</strong> LeRobot's ACT policy: ResNet-18 backbone with ImageNet weights, CVAE, action chunks of 50, 51.6M parameters. The whole dataset sits on the GPU and chunks are cut by index arithmetic, with no DataLoader.</li>
+      <li><strong>Evaluation.</strong> 50 episodes on fixed unseen seeds. Every failure is sorted into a type (never grasped, pushed, dropped far) and every rate is reported with its 95% confidence interval.</li>
+    </ol>
+
+    <div class="callout">
+      <div class="t">Expert quality</div>
+      <p>100% success without noise and 95% with DART noise (σ = 1.5°), checked before any demonstration was recorded.</p>
+    </div>
+
+    <h2>Results: ACT in simulation</h2>
+    <p>50 unseen episodes per row; the 95% confidence interval is about ±13 points.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Run</th><th class="n">Success</th><th>Main failures</th></tr></thead>
+      <tbody>
+        <tr><td>Baseline, 10k steps, replan every 50</td><td class="n">58%</td><td>pushed 10, dropped far 6</td></tr>
+        <tr><td>Same model, replan every 25</td><td class="n">70%</td><td></td></tr>
+        <tr class="best"><td>Same model, replan every 10</td><td class="n">74%</td><td>never grasped 6</td></tr>
+        <tr><td>Same model, replan every 5</td><td class="n">48%</td><td>dropped far 12</td></tr>
+        <tr><td>6k steps, replan 10, 25 demos</td><td class="n">34%</td><td>dropped far 18</td></tr>
+        <tr><td>6k steps, replan 10, 50 demos</td><td class="n">48%</td><td>dropped far 14</td></tr>
+        <tr><td>6k steps, replan 10, 100 demos</td><td class="n">78%</td><td>dropped far 6</td></tr>
+        <tr><td>6k steps, replan 10, 200 demos</td><td class="n">62%</td><td>dropped far 10</td></tr>
+        <tr><td>DART noise off (200 demos)</td><td class="n">50%</td><td>pushed 9, dropped far 12</td></tr>
+        <tr><td>Chunk 20 (200 demos)</td><td class="n">56%</td><td>dropped far 14</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <div class="callout">
+      <div class="t">What the data supports</div>
+      <ul>
+        <li>More demonstrations help: 25 → 34%, 50 → 48%, 100–200 → 62–78%.</li>
+        <li>Replanning every 10–25 steps beats executing the whole 50-step chunk. Every 5 steps is worse (48%): the chunk loses its smoothness.</li>
+        <li>Longer training helps: 62% at 6k steps vs 74% at 10k steps, both with 200 demos.</li>
+      </ul>
+    </div>
+    <div class="callout honest">
+      <div class="t">What it does not support</div>
+      <p>Ranking 100 against 200 demos, DART on against off (62% vs 50%), or chunk 50 against 20 (62% vs 56%). These gaps are inside the noise of 50 episodes and a single training seed. The next round uses 100 episodes and 3 training seeds.</p>
+    </div>
+
+    <h2>Engineering: measured speedups</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Change</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Render without shadows, reflections and MSAA (the renderer was on the integrated GPU)</td><td class="n">24 s → 3.6 s per episode (~7×)</td></tr>
+        <tr><td>8 parallel data-generation workers</td><td class="n">200 episodes in ~6 min</td></tr>
+        <tr><td>bf16 autocast, batch 64</td><td class="n">8.7 → 10.0 it/s (+15%)</td></tr>
+        <tr><td>Batch 128 instead of 64 (bf16)</td><td class="n">1.5× samples/s</td></tr>
+        <tr><td>Dataset resident on the GPU, no DataLoader</td><td class="n">no input stall</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h2>Real hardware: SO-101 bring-up</h2>
+    <p>I own a leader and a follower arm. Before collecting any real data I wrote a 28-item checklist in 7 groups (motors and limits, mapping, sim match, timing and data definition, camera and scene, safety, verification). The items most likely to break a real policy are the joint mapping, the timing, and the camera.</p>
+    <ul class="next-list">
+      <li class="done">Motor IDs and bus settings read and recorded for all 6 servos.</li>
+      <li class="done">Raw motor ticks mapped to simulator joint angles, with sign and zero per joint, checked by hand against a live simulator view.</li>
+      <li class="done">Gripper mapping (closed → 0, open → 100) and the meaning of state vs action fixed: state is the measured position, action is the goal position.</li>
+      <li class="done">Safety: software joint limits 40 ticks inside the measured hard stops, steps ≤ 0.5° per cycle, abort above 55 °C, arm clamped with clear space.</li>
+      <li>Geometry check: the tip lands 0.7 cm short of a 20 cm target (sag); base offset still to measure.</li>
+    </ul>
+
+    <figure>
+      <div class="frame flush"><img src="/assets/img/so101-wristcam.webp" width="1280" height="524" alt="Simulated wrist-camera views through each phase of the task: hover, descend, close, lift, transport, lower, release" loading="lazy"></div>
+      <figcaption>Wrist-camera placement checked in simulation across every phase of the task, before mounting the real camera.</figcaption>
+    </figure>
+
+    <h2>Pitfalls I hit</h2>
+    <ul>
+      <li>The offscreen renderer silently used the integrated GPU, so the RTX GPU sat idle during data generation. Measure before optimizing.</li>
+      <li>ACT's backbone uses frozen BatchNorm, so training it from scratch does not normalize; pretrained weights matter.</li>
+      <li>Grasp slip came from the friction cone and <code>impratio</code> settings, and soft contacts hid collisions. Simulator settings decide whether demonstrations are physically honest.</li>
+    </ul>
+
+    <h2>Next</h2>
+    <ul class="next-list">
+      <li>Re-run the ablations with 100 evaluation episodes and 3 training seeds.</li>
+      <li>Collect real demonstrations by teleoperation with the leader arm.</li>
+      <li>Train ACT on real data, then fine-tune a VLA (SmolVLA) and compare it against ACT on the same evaluation.</li>
+    </ul>
+  </div>
+
+  <nav class="case-nav" aria-label="More projects">
+    <a href="/projects/deep-nn.html"><span>← Previous</span>Deep learning from scratch</a>
+    <a class="r" href="/projects/saferl-lab.html"><span>Next →</span>saferl-lab</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <h2>Get in touch</h2>
+      <p>I am looking for robot learning roles in RL and VLA.</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a>
+      <a href="tel:+918249043321">+91 82490 43321</a>
+      <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">LinkedIn</a>
+      <a href="https://github.com/Lagnesh2003">GitHub</a>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

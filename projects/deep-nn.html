@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep learning from scratch, through world models · Lagnesh Mahapatra</title>
+  <meta name="description" content="Backprop, optimizers, normalization, LSTM and attention written by hand and verified against PyTorch, applied to a learned world model of a Furuta pendulum: 2000× better than linear, SimBa 14× better than MLP, Triton KV-cache kernel.">
+  <link rel="canonical" href="https://lagnesh2003.github.io/projects/deep-nn.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lagnesh2003.github.io/projects/deep-nn.html">
+  <meta property="og:title" content="Deep learning from scratch, through world models">
+  <meta property="og:description" content="Every core piece written by hand and checked against PyTorch, applied to one robotics problem: a Furuta pendulum world model.">
+  <meta property="og:image" content="https://lagnesh2003.github.io/assets/img/wm-rollout-error.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lagnesh Mahapatra, home"><span class="brand-mark">LM</span><span class="brand-name">Lagnesh Mahapatra</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/#projects">Projects</a>
+      <a href="/#updates" class="hide-sm">Updates</a>
+      <a href="/#experience" class="hide-sm">Experience</a>
+      <a href="/assets/Lagnesh_Mahapatra_CV.pdf">CV</a>
+      <button class="theme-toggle" type="button" aria-label="Switch light or dark theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <div class="crumbs"><a href="/#projects">← All projects</a></div>
+
+  <section class="case-hero">
+    <div class="meta-row"><span class="pill live">Active · updated 9 Nov 2026</span><span class="pill">Deep learning</span><span class="pill">World models</span></div>
+    <h1>Deep learning from scratch, through world models</h1>
+    <p class="lead">I wrote the core of deep learning by hand, checked each piece against PyTorch, and applied all of it to one robotics problem: a learned dynamics model (world model) of the Furuta pendulum from <a href="/projects/saferl-lab.html">saferl-lab</a>. The same model is the base for model-based RL on the real pendulum.</p>
+    <dl class="facts">
+      <div><dt>Problem</dt><dd>Predict the pendulum's next 10 ms from state + motor command</dd></div>
+      <div><dt>Data</dt><dd>205k and 2.1M simulated transitions, split by episode</dd></div>
+      <div><dt>Write-up</dt><dd>A 190-page maths book alongside the code</dd></div>
+      <div><dt>Links</dt><dd><a href="https://github.com/Lagnesh2003/Deep_NN">Code</a> · <a href="https://github.com/Lagnesh2003/Deep_NN/blob/main/LOG.md">Daily log</a></dd></div>
+    </dl>
+  </section>
+
+  <div class="prose">
+    <h2>Built by hand, verified against PyTorch</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Component</th><th>Check</th></tr></thead>
+      <tbody>
+        <tr><td>NumPy MLP with hand-written backprop</td><td>7/7 tests, 99.3% train accuracy</td></tr>
+        <tr><td>LayerNorm, forward and backward</td><td class="n">matches PyTorch to 1e-15</td></tr>
+        <tr><td>RNN and LSTM cells</td><td class="n">match nn.RNN / nn.LSTM to 5e-7 / 2e-7</td></tr>
+        <tr><td>Multi-head attention with causal mask, RoPE</td><td class="n">forward + backward to 2e-16</td></tr>
+        <tr><td>KV-cache inference step, CPU and one CUDA graph</td><td class="n">matches forward() to 1e-5</td></tr>
+        <tr><td>Whole KV-cache step as one hand-written Triton kernel</td><td class="n">20 µs GPU work, 101 µs end to end</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h2>A Furuta pendulum world model</h2>
+    <p>Input: the current observation (7 numbers) and the motor command. Output: the change in state over one 10 ms step. Besides one-step error I measure the <strong>50-step rollout error</strong>, where the model feeds on its own predictions. Small one-step errors that pile up over a rollout are the real problem in world models.</p>
+    <p>The training recipe (AdamW, 5% warmup + cosine decay, weight decay, batch 256) came from experiments on optimizers, schedules, clipping, regularization and a 20-trial random search. Over 5 seeds the tuned recipe beat the default 0.00090 ± 0.00007 vs 0.00307 ± 0.00022 validation MSE, 21 standard errors apart; only the learning rate really mattered.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th class="n">Params</th><th class="n">Test MSE</th><th class="n">Rollout error, step 10</th><th class="n">step 25</th><th class="n">step 50 (rad)</th></tr></thead>
+      <tbody>
+        <tr><td>Best linear model (least squares)</td><td class="n">n/a</td><td class="n">0.31</td><td class="n">0.47</td><td class="n">1.38</td><td class="n">1.64</td></tr>
+        <tr><td>MLP 256-256, 2.1M rows</td><td class="n">69k</td><td class="n">0.000151</td><td class="n">0.0074</td><td class="n">0.0370</td><td class="n">0.176</td></tr>
+        <tr class="best"><td>SimBa (pre-norm residual), 2.1M rows</td><td class="n">4.2M</td><td class="n">0.000011</td><td class="n">0.0021</td><td class="n">0.0096</td><td class="n">0.078</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Test MSE on standardized targets; rollout error is pendulum-angle RMSE on test episodes neither network trained on.</p>
+
+  <figure class="wide">
+    <div class="frame"><img src="/assets/img/wm-rollout-error.webp" width="1005" height="424" alt="Log-scale plot of pendulum angle and speed error over 50 rollout steps for a linear model and two neural networks" loading="lazy"></div>
+    <figcaption>Rollout error grows roughly ×10 every 25 steps, so a planner can trust the model for about 0.2–0.3 s. This is why MBPO and TD-MPC use short imagined rollouts re-anchored on real states.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <div class="callout">
+      <div class="t">Key finding</div>
+      <p>10× more data left the hardest output (pendulum speed) unchanged with the MLP; the data-scaling curve had flattened. The 4.2M-parameter SimBa model cut that error 4× in one step: the model was the bottleneck, not the data. At equal size, SimBa is still 1.9× better than an MLP, so the gain is architecture, not just parameters.</p>
+    </div>
+
+    <h2>Sequence models: when the robot only measures angles</h2>
+    <p>The real pendulum's encoders measure angles, not speeds. So the speeds are removed from the input and the model must infer them from history. I compared an MLP, SimBa, LSTM and causal Transformer at about 270k parameters, under clean sensing, encoder noise, a 20 ms delay and a hidden ±30% mass change.</p>
+    <div class="callout honest">
+      <div class="t">A result I had to retract</div>
+      <p>My first comparison said “the Transformer beats the LSTM 2×”. Every model had used a learning rate of 1e-3. Giving each model its own tuned rate (10–30× higher) improved the LSTM 6× and overturned the result. One-step rank also did not predict rollouts: the one-step winner was about 2.3× worse than SimBa at step 50.</p>
+    </div>
+    <p>A second look then made the Transformer modern (RoPE, RMSNorm, SwiGLU), and it gave the best 50-step rollouts of the angle-only models: 0.0219 vs 0.0277 for the LSTM and 0.0285 for SimBa. Under a 20 ms delay it was barely hurt (0.0222), while SimBa got 2.5× worse. It is now the default for the angle-only world model. Training was also made 1.8–5.1× faster with identical results (fused Adam, fused attention, CUDA graphs, TF32).</p>
+  </div>
+
+  <figure>
+    <div class="frame"><img src="/assets/img/dnn-attention.webp" width="655" height="525" alt="Lower-triangular attention map over a 20-step window: each step attends only to itself and earlier steps" loading="lazy" style="max-width:520px;margin:0 auto"></div>
+    <figcaption>Attention weights of the causal Transformer world model over a 20-step window: each step attends only to itself and the past.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>A world model that reports its uncertainty</h2>
+    <p>A Gaussian head (mean + σ) on the modern Transformer, trained with MSE, Gaussian NLL and β-NLL (β = 0.5) over 3 seeds. β-NLL is the right loss: calibrated σ (z<sub>rms</sub> 0.98 on clean data) with a mean almost as good as MSE, while plain NLL made the mean 17× worse.</p>
+    <p>On changed physics (mass 1.5–1.8×) the error grew 8× but an ensemble's epistemic σ grew only 8%. The inputs look familiar, so the members agree. An ensemble cannot detect changed dynamics; that needs an online surprise check against reality. This matters directly for a safety filter on the real robot.</p>
+
+    <h2>Other lessons, each from a measured experiment</h2>
+    <ul>
+      <li><strong>Initialization:</strong> in a 20-layer ReLU net, N(0,1) overflows to NaN, Xavier shrinks activations to 2e-4, He keeps them flat (val 0.013 vs 0.057).</li>
+      <li><strong>BatchNorm in RL:</strong> on consecutive, RL-like batches it gets 5× worse and cannot run on a single state; LayerNorm and RMSNorm do not have this problem.</li>
+      <li><strong>Precision:</strong> in bf16, 1.0 − 0.0001 stays 1.0, so all 1000 small updates are lost; autocast gave 1.9× speed at width 2048 with no accuracy change over 5 seeds.</li>
+      <li><strong>Debugging:</strong> five planted bugs, each identified from its loss curve alone; two of them look identical and only a shape assert tells them apart.</li>
+    </ul>
+  </div>
+
+  <figure>
+    <div class="frame"><img src="/assets/img/dnn-init.webp" width="1098" height="452" alt="Per-layer activation standard deviation and gradient norm for N(0,1), Xavier and He initialization in a 20-layer ReLU network" loading="lazy"></div>
+    <figcaption>Per-layer activations and gradients in a 20-layer ReLU network under three initializations.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>Next</h2>
+    <ul class="next-list">
+      <li>Temperature scaling, a surprise detector, and uncertain 50-step rollouts.</li>
+      <li>Generative policy heads (flow matching), the family VLA action heads use.</li>
+      <li>Behaviour cloning on the Furuta pendulum, then the world model inside model-based RL in saferl-lab.</li>
+    </ul>
+  </div>
+
+  <nav class="case-nav" aria-label="More projects">
+    <a href="/projects/saferl-lab.html"><span>← Previous</span>saferl-lab</a>
+    <a class="r" href="/projects/vla-so101.html"><span>Next →</span>VLA on the SO-101 arm</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <h2>Get in touch</h2>
+      <p>I am looking for robot learning roles in RL and VLA.</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:lagnesh22@gmail.com">lagnesh22@gmail.com</a>
+      <a href="tel:+918249043321">+91 82490 43321</a>
+      <a href="https://www.linkedin.com/in/lagnesh-mahapatra-135503249/">LinkedIn</a>
+      <a href="https://github.com/Lagnesh2003">GitHub</a>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
